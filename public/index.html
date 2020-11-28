@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+  
+  
+  var socket
+  function connect() {
+    socket = io()                 //starts connection with server
+    //console.log("Connected");
+    socket.emit('city',document.getElementById("city").value)
+    //console.log("data sent");
+    socket.on('data',function(response) {
+      //console.log(response);
+      modify(response)
+      $(document).ready(function() {
+        $("div#1").removeClass("hidden");
+      });
+      socket = null
+    })
+  }
+</script>
+
+<body>
+  
+  <div id="search">
+    <form action="javascript:connect()">
+    <div class="tb">
+      <div class="td"><input type="text" placeholder="Search" id="city" required></div>
+        <div class="td" id="s-cover">
+          <button type="submit">
+            <div id="s-circle"></div>
+            <span></span>
+          </button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+
+
+
+
+  <div class="hidden" id="1">
+    <p id="data.location.name" class="cityname"></p>
+    
+    
+    <div class="details" id="details">
+        <div class="block-1">
+            <p id="data.location.long" class="important-info"></p>
+            <p id="data.location.lat" class="important-info"></p>
+        </div>
+        <div class="block-2">
+          <p id="data.location.timezone" class="important-info"></p>
+          <p id="data.current.day" class="important-info"></p>
+        </div>
+        <div class="block-3">
+          <p id="data.current.humidity" class="important-info"></p>
+          <p id="data.current.winddisplay" class="important-info"></p>
+        </div>
+    </div>
+    
+    <p id="data.current.temperature" class="temp"></p>
+  </div>
+
+
+  <script>
+    function modify(data) {
+      //console.log("inside response");
+      document.getElementById("data.location.name").innerHTML = data.location.name;
+      document.getElementById("data.location.long").innerHTML = 'Lon: ' + data.location.long;
+      document.getElementById("data.location.lat").innerHTML = 'Lat: ' + data.location.lat;
+      document.getElementById("data.location.timezone").innerHTML = 'Timezone: ' + data.location.timezone;
+      document.getElementById("data.current.day").innerHTML = 'Day: ' + data.current.day;
+      document.getElementById("data.current.humidity").innerHTML = 'Humidity: ' + data.current.humidity;
+      document.getElementById("data.current.winddisplay").innerHTML = 'Winds: ' + data.current.winddisplay;
+      document.getElementById("data.current.temperature").innerHTML = data.current.temperature + '&#176C';
+      //console.log("elements Modified");
+    }
+  </script>
+
+
+
+
+
+</body>
+</html>
